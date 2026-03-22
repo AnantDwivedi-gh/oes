@@ -40,8 +40,12 @@ export function createOverlayWindow(): BrowserWindow {
     win.loadFile(join(__dirname, '../renderer/index.html'));
   }
 
-  // Start hidden — hotkey toggles visibility
-  win.hide();
+  // DECISION: Show immediately in dev for faster iteration; hide in production (hotkey toggles)
+  if (process.env.NODE_ENV === 'development') {
+    win.show();
+  } else {
+    win.hide();
+  }
 
   return win;
 }

@@ -1,12 +1,5 @@
 import { create } from 'zustand';
-
-interface ActionStep {
-  stepId: string;
-  description: string;
-  type: string;
-  status: 'pending' | 'running' | 'done' | 'failed' | 'skipped';
-  reversible: boolean;
-}
+import type { ActionStep } from '../../shared/types';
 
 interface SessionState {
   /** Current Convex session ID */
@@ -23,6 +16,8 @@ interface SessionState {
   addStep: (step: ActionStep) => void;
   /** Update a step's status */
   updateStep: (stepId: string, status: ActionStep['status']) => void;
+  /** Replace all steps at once */
+  setSteps: (steps: ActionStep[]) => void;
   /** Clear all steps */
   clearSteps: () => void;
 }
@@ -49,6 +44,8 @@ export const useSessionStore = create<SessionState>((set) => ({
       s.stepId === stepId ? { ...s, status } : s
     ),
   })),
+
+  setSteps: (steps): void => set({ steps }),
 
   clearSteps: (): void => set({ steps: [] }),
 }));
